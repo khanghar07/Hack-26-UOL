@@ -3,11 +3,11 @@ import {createRoot} from 'react-dom/client';
 import {onAuthStateChanged,signInWithEmailAndPassword,signOut} from 'firebase/auth';
 import {auth} from './auth';
 import './style.css';
+import {readApiResponse} from './response.mjs';
 async function api(path, body){
  const token=await auth.currentUser.getIdToken();
  const r=await fetch((import.meta.env.VITE_API_URL||'')+'/api/'+path,{method:body?'POST':'GET',headers:{Authorization:'Bearer '+token,...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});
- const data=await r.json();
- if(!r.ok){const d=data.detail;throw Error(typeof d==='string'?d:d?.issues?.map(i=>i.path+' — '+i.message).join('\n')||d?.message||'Check the submitted fields and retry.')}return data;
+ return readApiResponse(r);
 }
 function Brand(){return <b className="brand"><i>N</i> NovaWorks CRM</b>}
 function Login(){const [show,S]=useState(false),[error,E]=useState(''),[busy,B]=useState(false);
