@@ -11,7 +11,8 @@ from storage import database, initialize, profile
 
 @asynccontextmanager
 async def lifespan(app):
-    initialize()
+    if not os.getenv("VERCEL") or os.getenv("DATABASE_URL"):
+        initialize()
     yield
 
 app = FastAPI(title="NovaWorks CRM", version="0.3.1", lifespan=lifespan)
@@ -22,6 +23,8 @@ bearer = HTTPBearer(auto_error=False)
 def current_user(credentials: HTTPAuthorizationCredentials | None = Depends(bearer)):
     if not credentials:
         raise HTTPException(401, "Sign in to continue.")
+    if os.getenv("VERCEL") and not os.getenv("DATABASE_URL"):
+        raise HTTPException(503, "Production database is not configured.")
     try:
         uid = verify(credentials.credentials)
     except (DefaultCredentialsError, BackendNotConfigured):
@@ -40,6 +43,8 @@ def current_user(credentials: HTTPAuthorizationCredentials | None = Depends(bear
 
 @app.get("/health")
 def health():
+    if os.getenv("VERCEL") and not os.getenv("DATABASE_URL"):
+        raise HTTPException(503, "Production database is not configured.")
     return {"status": "ok"}
 
 @app.get("/api/me")
