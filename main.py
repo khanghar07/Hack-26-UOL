@@ -13,6 +13,12 @@ from storage import database, initialize, profile
 async def lifespan(app):
     if not os.getenv("VERCEL") or os.getenv("DATABASE_URL"):
         initialize()
+        if os.getenv("VERCEL") and os.getenv("FIREBASE_SERVICE_ACCOUNT_JSON") and os.getenv("ADMIN_EMAIL"):
+            with database() as db:
+                has_profiles = db.execute("SELECT id FROM users LIMIT 1").fetchone()
+            if not has_profiles:
+                from seed import seed
+                seed()
     yield
 
 app = FastAPI(title="NovaWorks CRM", version="0.3.1", lifespan=lifespan)
