@@ -18,6 +18,8 @@ def seed():
             try:
                 user = auth.get_user_by_email(email, app=app)
             except auth.UserNotFoundError:
+                if os.getenv("VERCEL"):
+                    raise RuntimeError("The configured admin email must already exist in Firebase.")
                 try:
                     user = auth.get_user(reference_uid, app=app)
                 except auth.UserNotFoundError:
