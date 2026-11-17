@@ -51,7 +51,7 @@ To use your Aiven service, run `python configure_aiven.py` before seeding. Paste
 ## Configuration and hosted mode
 The two .env examples document the runtime settings. DATABASE_PATH selects local SQLite; DATABASE_URL selects PostgreSQL. FIREBASE_PROJECT_ID and FIREBASE_AUTH_EMULATOR_HOST select the auth environment. Hosted Firebase uses GOOGLE_APPLICATION_CREDENTIALS pointing to a private project service-account file. AI_PROVIDER, OPENROUTER_MODEL, OPENROUTER_API_KEY and optional AI_FALLBACK_PROVIDER / GEMINI_MODEL / GEMINI_API_KEY configure extraction. OpenRouter free routing was tested; model availability varies. FRONTEND_ORIGIN controls CORS. The frontend normally uses same-origin API requests.
 
-For hosted Firebase, use .env.hosted.example as .env, supply private settings and run python seed.py with the project service account. Build the frontend using `cd frontend && npm ci && npm run build` and restart the backend. To rebuild for the emulator use `VITE_AUTH_EMULATOR=true npm run build`. The Dockerfile builds the hosted frontend and serves both layers together. No deployment was requested for this release.
+For hosted Firebase, use .env.hosted.example as .env, supply private settings and run python seed.py with the project service account. Build the frontend using `cd frontend && npm ci && npm run build` and restart the backend. To rebuild for the emulator use `VITE_AUTH_EMULATOR=true npm run build`. The Dockerfile builds the hosted frontend and serves both layers together. Production is deployed from GitHub main to Vercel, with Aiven PostgreSQL and hosted Firebase Authentication.
 
 ## Verification and submission
 See FINAL_CHECKS.md and demo.mp4. Automated tests use isolated databases and Auth Emulator users. With the local .env and a stopped emulator:
@@ -60,4 +60,10 @@ npx --yes firebase-tools@14 emulators:exec --only auth --project demo-novaworks 
 ```
 Run python check_phase3.py --live for original, modified and missing-value AI cases (uses provider quota). Source matching requires the final task title and hours together in the meeting recap. The backend rejects an unsupported estimate. The UI supports desktop and mobile widths.
 
-Submission fields still to supply: official team name, four participant names and responsibilities, GitHub URL, and an accessible upload link for the included demo recording. Live deployment status: not deployed.
+Production application: https://novaworks-hack26-uol.vercel.app
+
+Source: https://github.com/khanghar07/Hack-26-UOL
+
+Demo recording (fixture AI response): [demo.mp4](./demo.mp4). For a live demo, use the accounts above. The admin password is shared privately.
+
+Team details pending: official team name, four participant names and responsibilities.
