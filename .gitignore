@@ -1,0 +1,15 @@
+.env
+.venv/
+data/
+__pycache__/
+*.log
+*-firebase-adminsdk-*.json
+.env.*
+!.env.example
+!.env.hosted.example
+*service-account*.json
+credentials*.json
+
+frontend/dist/
+frontend/node_modules/
+.vercel/
